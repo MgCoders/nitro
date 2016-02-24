@@ -1,18 +1,20 @@
 package mgcoders.uy.data;
 
-import mgcoders.uy.model.Opcion;
-import mgcoders.uy.model.Pregunta;
-import mgcoders.uy.model.Votacion;
-import mgcoders.uy.model.Votante;
-import mgcoders.uy.service.VotacionService;
-import mgcoders.uy.service.VotantesService;
+import mgcoders.uy.discourse.DiscourseAPIService;
+import mgcoders.uy.model.Properties;
+import mgcoders.uy.service.voting.VotacionService;
+import mgcoders.uy.service.voting.VotantesService;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
+import javax.enterprise.inject.Produces;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
-import java.util.Date;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -22,17 +24,21 @@ import java.util.logging.Logger;
 @Startup
 public class SessionBean {
 
+    @Produces
+    private static Map<String, String> organikaProperties = new HashMap<>();
     @Inject
     VotacionService votacionService;
-
     @Inject
     VotantesService votantesService;
-
+    @Inject
+    DiscourseAPIService discourseAPIService;
     @Inject
     private EntityManager em;
-
     @Inject
     private Logger log;
+    @Inject
+    private SimpleDateFormat simpleDateFormat;
+
 
 
     public SessionBean() {
@@ -40,32 +46,11 @@ public class SessionBean {
 
     @PostConstruct
     public void init() {
-        Votante votante = new Votante();
-        votante.setNombreUsuario("raul");
-        votantesService.guardarVotante(votante);
-        Votacion votacion = new Votacion();
-        Pregunta pregunta = new Pregunta();
-        pregunta.setExplicacion("Algo aca");
-        pregunta.setPregunta("MgCoders o los bobos de la ORT?");
-        pregunta.setRespuestasMinimas(0);
-        pregunta.setRespuestasMaximas(1);
-        Opcion opcion = new Opcion();
-        opcion.setDescripcion("si");
-        pregunta.getOpciones().add(opcion);
-        Opcion opcionno = new Opcion();
-        opcionno.setDescripcion("no");
-        pregunta.getOpciones().add(opcionno);
-        votacion.getPreguntas().add(pregunta);
-        votacion.setFechaCreacion(new Date());
-        votacion.setFechaInicio(new Date());
-        votacion.setFechaFin(new Date());
-        votacion.addVotante(votante);
-        votacionService.guardarVotacion(votacion);
 
-        em.flush();
-
-
-        log.info("################# BD" + votante.getVotaciones().get(0).getTokenAutorizacion());
-
+        //Properties
+        List<Properties> propertiesList = em.createNamedQuery("Properties.findAll", Properties.class).getResultList();
+        for (Properties p : propertiesList) {
+            organikaProperties.put(p.getKey(), p.getValue());
+        }
     }
 }

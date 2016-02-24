@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
 <!--
     JBoss, Home of Professional Open Source
     Copyright 2013, Red Hat, Inc. and/or its affiliates, and individual
@@ -15,9 +16,25 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<!-- Marker file indicating CDI should be enabled -->
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-       xsi:schemaLocation="
-        http://xmlns.jcp.org/xml/ns/javaee
-        http://xmlns.jcp.org/xml/ns/javaee/beans_1_1.xsd" bean-discovery-mode="all">
-</beans>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:b="http://bootsfaces.net/ui">
+
+<h:head/>
+<h:body>
+    <ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                    xmlns:ui="http://java.sun.com/jsf/facelets"
+                    xmlns:h="http://java.sun.com/jsf/html"
+                    xmlns:b="http://bootsfaces.net/ui"
+                    xmlns:p="http://primefaces.org/ui"
+                    template="/WEB-INF/templates/tempboo.xhtml">
+        <ui:define name="content">
+
+            <b:panel title="OK!">
+                <p:outputLabel>#{sessionController.personaConectada.toString()}</p:outputLabel>
+            </b:panel>
+
+        </ui:define>
+    </ui:composition>
+</h:body>
+</html>
